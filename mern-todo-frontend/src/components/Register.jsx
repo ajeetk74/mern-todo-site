@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
-export default function Register({ onRegister }) {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,11 +13,9 @@ export default function Register({ onRegister }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_BASE}/auth/register`, { username, password });
-      localStorage.setItem("token", res.data.token);
-      onRegister(res.data.token);
-      toast.success("✅ Registration successful!");
-      navigate("/"); // redirect to main TodoApp
+      await axios.post(`${API_BASE}/auth/register`, { username, password });
+      toast.success("✅ Registration successful! Please login.");
+      navigate("/login");
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "❌ Registration failed");
@@ -26,7 +24,7 @@ export default function Register({ onRegister }) {
 
   return (
     <div className="auth-page">
-      <form className="auth-form" onSubmit={handleRegister}>
+      <form className="auth-form" onSubmit={handleRegister} autoComplete="off">
         <h2>Register</h2>
         <input
           type="text"
