@@ -5,22 +5,13 @@ import { toast } from "react-toastify";
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 const TODOS_ENDPOINT = `${API_BASE}/todos`;
 
-export default function TodoApp({ token, user, handleLogout }) {
+export default function TodoApp({ token, user, onLogout }) {
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [error, setError] = useState("");
 
-  // Disable right click
-  useEffect(() => {
-    const handleRightClick = (e) => e.preventDefault();
-    document.addEventListener("contextmenu", handleRightClick);
-    return () => document.removeEventListener("contextmenu", handleRightClick);
-  }, []);
-
-  // Fetch todos
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -32,7 +23,7 @@ export default function TodoApp({ token, user, handleLogout }) {
       });
       setTodos(res.data);
     } catch (err) {
-      console.error("Error fetching todos:", err);
+      console.error(err);
       toast.error("❌ Unable to fetch tasks");
     }
   };
@@ -40,16 +31,7 @@ export default function TodoApp({ token, user, handleLogout }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmedTitle = title.trim();
-    if (!trimmedTitle) {
-      setError("⚠️ Please enter a task!");
-      return;
-    }
-    setError("");
-
-    const isDuplicate = todos.some(
-      (t) => t.title.toLowerCase() === trimmedTitle.toLowerCase()
-    );
-    if (isDuplicate) return toast.warning("⚠️ Task already exists!");
+    if (!trimmedTitle) return toast.warning("⚠️ Task cannot be empty");
 
     try {
       const res = await axios.post(
@@ -62,7 +44,7 @@ export default function TodoApp({ token, user, handleLogout }) {
       toast.success("✅ Task added!");
     } catch (err) {
       console.error(err);
-      toast.error("❌ Error adding task");
+      toast.error(err.response?.data?.message || "❌ Error adding task");
     }
   };
 
@@ -89,11 +71,6 @@ export default function TodoApp({ token, user, handleLogout }) {
     const trimmedTitle = editTitle.trim();
     if (!trimmedTitle) return toast.warning("⚠️ Task cannot be empty");
 
-    const isDuplicate = todos.some(
-      (t) => t.title.toLowerCase() === trimmedTitle.toLowerCase() && t._id !== editId
-    );
-    if (isDuplicate) return toast.warning("⚠️ Task already exists");
-
     try {
       const res = await axios.put(
         `${TODOS_ENDPOINT}/${editId}`,
@@ -112,7 +89,7 @@ export default function TodoApp({ token, user, handleLogout }) {
   return (
     <div className="app-container">
       <h1>📋 {user.username}'s Todo List</h1>
-      <button className="logout-btn" onClick={handleLogout}>
+      <button className="logout-btn" onClick={onLogout}>
         Logout
       </button>
 
@@ -121,38 +98,24 @@ export default function TodoApp({ token, user, handleLogout }) {
           type="text"
           placeholder="Enter task..."
           value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            if (e.target.value.trim() !== "") setError("");
-          }}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <button type="submit">Add</button>
       </form>
-      {error && <p className="error-message">{error}</p>}
 
-      {todos.length === 0 ? (
-        <p className="no-tasks">No tasks yet! Add a task. 📝</p>
-      ) : (
-        <ul className="todo-list">
-          {todos.map((todo) => (
-            <li key={todo._id} className="todo-item">
-              <span
-                style={{ textDecoration: todo.completed ? "line-through" : "none" }}
-              >
-                {todo.title}
-              </span>
-              <div>
-                <button className="edit" onClick={() => openEditModal(todo)}>
-                  Edit
-                </button>
-                <button className="delete" onClick={() => handleDelete(todo._id)}>
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="todo-list">
+        {todos.map((todo) => (
+          <li key={todo._id}>
+            <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
+              {todo.title}
+            </span>
+            <div>
+              <button onClick={() => openEditModal(todo)}>Edit</button>
+              <button onClick={() => handleDelete(todo._id)}>Delete</button>
+            </div>
+          </li>
+        ))}
+      </ul>
 
       {/* Edit Modal */}
       {modalOpen && (
