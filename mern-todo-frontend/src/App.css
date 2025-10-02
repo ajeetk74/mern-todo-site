@@ -1,256 +1,146 @@
-/* ===== Reset & Global ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
-  background: linear-gradient(135deg, #74ebd5, #acb6e5);
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
 }
 
-/* ===== App Container ===== */
-.app-container {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 30px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+.app-container, .auth-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: rgba(255,255,255,0.9);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* ===== Header ===== */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-header h1 {
-  font-size: 1.8rem;
-  color: #333;
-}
-
-.logout-btn {
-  background-color: #ff6b6b;
-  color: #fff;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.logout-btn:hover {
-  background-color: #ff4c4c;
-}
-
-/* ===== Auth Container ===== */
-.auth-container {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 30px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+h1 {
   text-align: center;
-}
-
-.auth-container h1 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.auth-container input {
-  width: 90%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.auth-container button {
-  width: 95%;
-  padding: 10px;
-  background-color: #4facfe;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.3s;
-}
-
-.auth-container button:hover {
-  background-color: #00f2fe;
-}
-
-.switch-auth {
-  margin-top: 15px;
-  color: #555;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* ===== Todo Form ===== */
-.todo-form {
-  display: flex;
-  gap: 10px;
   margin-bottom: 20px;
 }
 
 .todo-form input {
-  flex: 1;
   padding: 10px;
+  width: 70%;
   border-radius: 8px;
   border: 1px solid #ccc;
+  margin-right: 10px;
 }
 
 .todo-form button {
-  padding: 10px 16px;
-  background-color: #4facfe;
-  color: white;
+  padding: 10px 20px;
   border: none;
+  background-color: #4caf50;
+  color: white;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.todo-form button:hover {
-  background-color: #00f2fe;
-}
-
-/* ===== Todo List ===== */
 .todo-list {
   list-style: none;
+  padding: 0;
+  margin-top: 20px;
 }
 
 .todo-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: #f7f7f7;
+  background: #f0f8ff;
   margin-bottom: 10px;
-  padding: 10px 14px;
+  padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.todo-item span {
-  cursor: pointer;
 }
 
 .todo-item button {
   margin-left: 5px;
-  padding: 4px 10px;
+  padding: 5px 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.todo-item button:nth-child(1) {
-  background-color: #ffd93d;
-}
-
-.todo-item button:nth-child(1):hover {
+.edit {
   background-color: #ffc107;
+  color: #fff;
 }
 
-.todo-item button:nth-child(2) {
-  background-color: #ff6b6b;
-  color: white;
+.delete {
+  background-color: #f44336;
+  color: #fff;
 }
 
-.todo-item button:nth-child(2):hover {
-  background-color: #ff4c4c;
+.error-message {
+  color: red;
+  margin-top: 5px;
 }
 
-/* ===== No Tasks ===== */
 .no-tasks {
   text-align: center;
   color: #555;
-  font-style: italic;
 }
 
-/* ===== Modal ===== */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-.modal {
-  background: #fff;
-  padding: 25px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.modal h2 {
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.modal input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.modal-buttons button {
-  padding: 8px 14px;
+.logout-btn {
+  float: right;
+  margin-bottom: 10px;
+  background-color: #f44336;
+  color: white;
   border: none;
-  border-radius: 8px;
+  padding: 5px 12px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.modal-buttons button:first-child {
-  background-color: #4facfe;
-  color: white;
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top:0; left:0;
+  width: 100%; height:100%;
+  background: rgba(0,0,0,0.4);
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.modal-buttons button:first-child:hover {
-  background-color: #00f2fe;
+.modal {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
 }
 
-.modal-buttons button:last-child {
-  background-color: #ff6b6b;
-  color: white;
+.modal-buttons button {
+  margin-right:10px;
 }
 
-.modal-buttons button:last-child:hover {
-  background-color: #ff4c4c;
+/* Auth forms */
+.auth-forms {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-/* ===== Footer ===== */
+.auth-form input {
+  display:block;
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:5px;
+  border:1px solid #ccc;
+}
+
+.auth-form button {
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:5px;
+  background-color:#4caf50;
+  color:white;
+  cursor:pointer;
+}
+
+/* Footer */
 .footer {
-  margin-top: 30px;
-  text-align: center;
-  color: #333;
-  font-size: 0.9rem;
+  text-align:center;
+  margin-top:30px;
+  font-size:14px;
 }
