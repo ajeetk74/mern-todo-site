@@ -1,149 +1,217 @@
-/* Global Reset */
+/* ===== Reset & Global ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background: linear-gradient(to right, #74ebd5, #acb6e5);
+  background: linear-gradient(135deg, #74ebd5, #acb6e5);
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
-/* Header */
+/* ===== App Container ===== */
+.app-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Header ===== */
 header {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
+  margin-bottom: 20px;
 }
 
 header h1 {
   font-size: 1.8rem;
+  color: #333;
 }
 
 .logout-btn {
-  background: #ff6b6b;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  background-color: #ff6b6b;
   color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .logout-btn:hover {
-  background: #ff4b4b;
+  background-color: #ff4c4c;
 }
 
-/* Container */
-.app-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
+/* ===== Auth Container ===== */
+.auth-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
 }
 
+.auth-container h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.auth-container input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.auth-container button {
+  width: 95%;
+  padding: 10px;
+  background-color: #4facfe;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.auth-container button:hover {
+  background-color: #00f2fe;
+}
+
+.switch-auth {
+  margin-top: 15px;
+  color: #555;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ===== Todo Form ===== */
 .todo-form {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .todo-form input {
   flex: 1;
-  padding: 0.5rem 1rem;
+  padding: 10px;
   border-radius: 8px;
-  border: none;
-  outline: none;
+  border: 1px solid #ccc;
 }
 
 .todo-form button {
-  padding: 0.5rem 1rem;
+  padding: 10px 16px;
+  background-color: #4facfe;
+  color: white;
   border: none;
-  background: #4dabf7;
-  color: #fff;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .todo-form button:hover {
-  background: #1971c2;
+  background-color: #00f2fe;
 }
 
-/* Todo List */
+/* ===== Todo List ===== */
 .todo-list {
   list-style: none;
-  width: 100%;
-  max-width: 600px;
 }
 
 .todo-item {
   display: flex;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.3);
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-  color: #fff;
   align-items: center;
+  background: #f7f7f7;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.todo-item span {
+  cursor: pointer;
 }
 
 .todo-item button {
-  margin-left: 0.5rem;
-  padding: 0.3rem 0.6rem;
+  margin-left: 5px;
+  padding: 4px 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.todo-item button:hover {
-  opacity: 0.8;
+.todo-item button:nth-child(1) {
+  background-color: #ffd93d;
 }
 
-.todo-item button:nth-child(1) {
-  background: #ffd43b;
-  color: #000;
+.todo-item button:nth-child(1):hover {
+  background-color: #ffc107;
 }
 
 .todo-item button:nth-child(2) {
-  background: #ff6b6b;
-  color: #fff;
+  background-color: #ff6b6b;
+  color: white;
 }
 
-/* Modal */
+.todo-item button:nth-child(2):hover {
+  background-color: #ff4c4c;
+}
+
+/* ===== No Tasks ===== */
+.no-tasks {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+}
+
+/* ===== Modal ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
 }
 
 .modal {
   background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  min-width: 300px;
+  padding: 25px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal h2 {
+  margin-bottom: 15px;
+  color: #333;
 }
 
 .modal input {
   width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
+  padding: 10px;
+  margin-bottom: 15px;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
@@ -151,53 +219,38 @@ header h1 {
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .modal-buttons button {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 8px 14px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
 .modal-buttons button:first-child {
-  background: #4dabf7;
-  color: #fff;
+  background-color: #4facfe;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #00f2fe;
 }
 
 .modal-buttons button:last-child {
-  background: #ff6b6b;
-  color: #fff;
+  background-color: #ff6b6b;
+  color: white;
 }
 
-/* Footer */
+.modal-buttons button:last-child:hover {
+  background-color: #ff4c4c;
+}
+
+/* ===== Footer ===== */
 .footer {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  margin-top: 30px;
   text-align: center;
-  padding: 1rem;
-  color: #fff;
-  margin-top: auto;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .todo-form {
-    flex-direction: column;
-  }
-
-  .todo-form button {
-    width: 100%;
-  }
-
-  .todo-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .todo-item div {
-    margin-top: 0.5rem;
-  }
+  color: #333;
+  font-size: 0.9rem;
 }
