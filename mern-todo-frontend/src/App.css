@@ -1,146 +1,320 @@
-body {
+/* ------------------------------
+   Global Reset & Body
+------------------------------ */
+* {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
   background: linear-gradient(135deg, #89f7fe, #66a6ff);
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
-.app-container, .auth-container {
-  max-width: 600px;
-  margin: 50px auto;
-  background: rgba(255,255,255,0.9);
-  padding: 25px;
+/* ------------------------------
+   App Container
+------------------------------ */
+.app-container {
+  background: rgba(255, 255, 255, 0.95);
+  width: 100%;
+  max-width: 500px;
   border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ------------------------------
+   Headings
+------------------------------ */
 h1 {
-  text-align: center;
+  font-size: 2rem;
   margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* ------------------------------
+   Todo Form
+------------------------------ */
+.todo-form {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 .todo-form input {
-  padding: 10px;
-  width: 70%;
-  border-radius: 8px;
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  margin-right: 10px;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.todo-form input:focus {
+  outline: none;
+  border-color: #66a6ff;
+  box-shadow: 0 0 8px rgba(102, 166, 255, 0.5);
 }
 
 .todo-form button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
-  background-color: #4caf50;
+  border-radius: 10px;
+  background: #66a6ff;
   color: white;
-  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
 }
 
+.todo-form button:hover {
+  background: #89f7fe;
+}
+
+/* ------------------------------
+   Error & Info Messages
+------------------------------ */
+.error-message {
+  color: #ff4d4f;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.no-tasks {
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* ------------------------------
+   Todo List
+------------------------------ */
 .todo-list {
   list-style: none;
-  padding: 0;
-  margin-top: 20px;
+  width: 100%;
 }
 
 .todo-item {
   display: flex;
   justify-content: space-between;
-  background: #f0f8ff;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 10px;
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
+  background: linear-gradient(90deg, #ffecd2, #fcb69f);
+  font-weight: 500;
+  transition: transform 0.2s;
 }
 
+.todo-item:hover {
+  transform: translateY(-3px);
+}
+
+.todo-item span {
+  cursor: pointer;
+}
+
+/* Buttons inside Todo Items */
 .todo-item button {
   margin-left: 5px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.3s;
 }
 
-.edit {
-  background-color: #ffc107;
-  color: #fff;
+.todo-item button.edit {
+  background: #ffd700;
+  color: #333;
 }
 
-.delete {
-  background-color: #f44336;
-  color: #fff;
+.todo-item button.edit:hover {
+  background: #ffc107;
 }
 
-.error-message {
-  color: red;
-  margin-top: 5px;
-}
-
-.no-tasks {
-  text-align: center;
-  color: #555;
-}
-
-.logout-btn {
-  float: right;
-  margin-bottom: 10px;
-  background-color: #f44336;
+.todo-item button.delete {
+  background: #ff4d4f;
   color: white;
-  border: none;
-  padding: 5px 12px;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
-/* Modal */
+.todo-item button.delete:hover {
+  background: #e04144;
+}
+
+/* ------------------------------
+   Modal
+------------------------------ */
 .modal-overlay {
   position: fixed;
-  top:0; left:0;
-  width: 100%; height:100%;
-  background: rgba(0,0,0,0.4);
-  display:flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .modal {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:300px;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal input {
+  width: 100%;
+  padding: 12px 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 .modal-buttons button {
-  margin-right:10px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-/* Auth forms */
+.modal-buttons button:first-child {
+  background: #66a6ff;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background: #89f7fe;
+}
+
+.modal-buttons button:last-child {
+  background: #ff4d4f;
+  color: white;
+}
+
+.modal-buttons button:last-child:hover {
+  background: #e04144;
+}
+
+/* ------------------------------
+   Auth Forms (Login/Register)
+------------------------------ */
+.auth-container {
+  width: 100%;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
 .auth-forms {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 20px;
 }
 
 .auth-form input {
-  display:block;
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:5px;
-  border:1px solid #ccc;
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
 .auth-form button {
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:5px;
-  background-color:#4caf50;
-  color:white;
-  cursor:pointer;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #66a6ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* Footer */
+.auth-form button:hover {
+  background: #89f7fe;
+}
+
+/* ------------------------------
+   Logout Button
+------------------------------ */
+.logout-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 15px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #e04144;
+}
+
+/* ------------------------------
+   Footer
+------------------------------ */
 .footer {
-  text-align:center;
-  margin-top:30px;
-  font-size:14px;
+  text-align: center;
+  margin-top: 30px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.footer span {
+  color: red;
+}
+
+/* ------------------------------
+   Responsive
+------------------------------ */
+@media (max-width: 600px) {
+  .todo-form {
+    flex-direction: column;
+  }
+
+  .todo-form button {
+    width: 100%;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .auth-forms {
+    gap: 15px;
+  }
 }
