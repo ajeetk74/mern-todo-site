@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import api from "./services/api";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+
+// Backend API URL
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -10,6 +13,9 @@ function App() {
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+
+  // Auth states
+  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
@@ -21,18 +27,21 @@ function App() {
     return () => document.removeEventListener("contextmenu", handleContextMenu);
   }, []);
 
-  // Check if user is logged in
+  // Check if user is already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setLoggedIn(true);
-      fetchTodos();
+      fetchTodos(token);
     }
   }, []);
 
-  const fetchTodos = async () => {
+  // Fetch todos
+  const fetchTodos = async (token) => {
     try {
-      const res = await api.get("/todos");
+      const res = await axios.get(`${API_BASE}/todos`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setTodos(res.data);
     } catch (err) {
       console.error(err);
@@ -40,31 +49,47 @@ function App() {
     }
   };
 
-  const handleLogin = async (e) => {
+  // Handle register/login
+  const handleAuth = async (e) => {
     e.preventDefault();
     if (!username || !password) return toast.warning("⚠️ Enter username and password");
 
     try {
-      const res = await api.post("/auth/login", { username, password });
+      const endpoint = isLogin ? "login" : "register";
+      const res = await axios.post(`${API_BASE}/auth/${endpoint}`, { username, password });
       localStorage.setItem("token", res.data.token);
       setLoggedIn(true);
       setUsername("");
       setPassword("");
-      fetchTodos();
-      toast.success("✅ Logged in successfully!");
+      fetchTodos(res.data.token);
+      toast.success(`✅ ${isLogin ? "Logged in" : "Registered"} successfully!`);
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "❌ Login failed");
+      toast.error(err.response?.data?.message || "❌ Authentication failed");
     }
   };
 
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    setTodos([]);
+    toast.info("🔒 Logged out");
+  };
+
+  // Add task
   const handleAdd = async (e) => {
     e.preventDefault();
     const trimmed = title.trim();
     if (!trimmed) return toast.warning("⚠️ Enter a task");
 
+    const token = localStorage.getItem("token");
     try {
-      const res = await api.post("/todos", { title: trimmed });
+      const res = await axios.post(
+        `${API_BASE}/todos`,
+        { title: trimmed },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setTodos([...todos, res.data]);
       setTitle("");
       toast.success("✅ Task added!");
@@ -74,9 +99,13 @@ function App() {
     }
   };
 
+  // Delete task
   const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
     try {
-      await api.delete(`/todos/${id}`);
+      await axios.delete(`${API_BASE}/todos/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setTodos(todos.filter((t) => t._id !== id));
       toast.warn("🗑️ Task deleted!");
     } catch (err) {
@@ -85,18 +114,25 @@ function App() {
     }
   };
 
+  // Open edit modal
   const openEditModal = (todo) => {
     setEditId(todo._id);
     setEditTitle(todo.title);
     setModalOpen(true);
   };
 
+  // Update task
   const handleUpdate = async () => {
     const trimmed = editTitle.trim();
     if (!trimmed) return toast.warning("⚠️ Enter a task");
 
+    const token = localStorage.getItem("token");
     try {
-      const res = await api.put(`/todos/${editId}`, { title: trimmed });
+      const res = await axios.put(
+        `${API_BASE}/todos/${editId}`,
+        { title: trimmed },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setTodos(todos.map((t) => (t._id === editId ? res.data : t)));
       setModalOpen(false);
       toast.info("✏️ Task updated!");
@@ -106,18 +142,14 @@ function App() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setLoggedIn(false);
-    setTodos([]);
-    toast.info("🔒 Logged out");
-  };
-
+  // --------------------------
+  // Render
+  // --------------------------
   if (!loggedIn) {
     return (
       <div className="auth-container">
-        <h1>🔑 Login</h1>
-        <form onSubmit={handleLogin}>
+        <h1>{isLogin ? "🔑 Login" : "📝 Register"}</h1>
+        <form onSubmit={handleAuth}>
           <input
             type="text"
             placeholder="Username"
@@ -130,8 +162,11 @@ function App() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <button type="submit">{isLogin ? "Login" : "Register"}</button>
         </form>
+        <p className="switch-auth" onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
+        </p>
       </div>
     );
   }
