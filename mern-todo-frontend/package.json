@@ -5,14 +5,9 @@
   "description": "Frontend for MERN Todo App",
   "homepage": "https://ajeetk74.github.io/mern-todo-site/",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:vercel": "vite build --config vite.config.vercel.js",
-  "preview": "vite preview"
-},
-  "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:vercel": "vite build --config vite.config.vercel.js",
     "preview": "vite preview"
   },
   "dependencies": {
