@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "./TodoApp.css"; // optional separate CSS for tasks
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const TODOS_ENDPOINT = `${API_BASE}/todos`;
 
-export default function TodoApp({ token, user, onLogout }) {
+export default function TodoApp({ token, user, handleLogout }) {
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [error, setError] = useState("");
 
-  const TODOS_ENDPOINT = `${API_BASE}/todos`;
+  // Disable right click
+  useEffect(() => {
+    const handleRightClick = (e) => e.preventDefault();
+    document.addEventListener("contextmenu", handleRightClick);
+    return () => document.removeEventListener("contextmenu", handleRightClick);
+  }, []);
 
+  // Fetch todos
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -25,23 +32,31 @@ export default function TodoApp({ token, user, onLogout }) {
       });
       setTodos(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching todos:", err);
       toast.error("❌ Unable to fetch tasks");
     }
   };
 
-  const handleAdd = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmedTitle = title.trim();
-    if (!trimmedTitle) return toast.warning("⚠️ Enter a task");
+    if (!trimmedTitle) {
+      setError("⚠️ Please enter a task!");
+      return;
+    }
+    setError("");
 
-    const duplicate = todos.some(t => t.title.toLowerCase() === trimmedTitle.toLowerCase());
-    if (duplicate) return toast.warning("⚠️ Task already exists");
+    const isDuplicate = todos.some(
+      (t) => t.title.toLowerCase() === trimmedTitle.toLowerCase()
+    );
+    if (isDuplicate) return toast.warning("⚠️ Task already exists!");
 
     try {
-      const res = await axios.post(TODOS_ENDPOINT, { title: trimmedTitle }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.post(
+        TODOS_ENDPOINT,
+        { title: trimmedTitle },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setTodos([...todos, res.data]);
       setTitle("");
       toast.success("✅ Task added!");
@@ -56,7 +71,7 @@ export default function TodoApp({ token, user, onLogout }) {
       await axios.delete(`${TODOS_ENDPOINT}/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setTodos(todos.filter(t => t._id !== id));
+      setTodos(todos.filter((t) => t._id !== id));
       toast.warn("🗑️ Task deleted!");
     } catch (err) {
       console.error(err);
@@ -74,16 +89,18 @@ export default function TodoApp({ token, user, onLogout }) {
     const trimmedTitle = editTitle.trim();
     if (!trimmedTitle) return toast.warning("⚠️ Task cannot be empty");
 
-    const duplicate = todos.some(
-      t => t.title.toLowerCase() === trimmedTitle.toLowerCase() && t._id !== editId
+    const isDuplicate = todos.some(
+      (t) => t.title.toLowerCase() === trimmedTitle.toLowerCase() && t._id !== editId
     );
-    if (duplicate) return toast.warning("⚠️ Task already exists");
+    if (isDuplicate) return toast.warning("⚠️ Task already exists");
 
     try {
-      const res = await axios.put(`${TODOS_ENDPOINT}/${editId}`, { title: trimmedTitle }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setTodos(todos.map(t => t._id === editId ? res.data : t));
+      const res = await axios.put(
+        `${TODOS_ENDPOINT}/${editId}`,
+        { title: trimmedTitle },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setTodos(todos.map((t) => (t._id === editId ? res.data : t)));
       setModalOpen(false);
       toast.info("✏️ Task updated!");
     } catch (err) {
@@ -94,33 +111,43 @@ export default function TodoApp({ token, user, onLogout }) {
 
   return (
     <div className="app-container">
-      <header className="header">
-        <h1>📋 {user.username}'s Todo List</h1>
-        <button className="logout-btn" onClick={onLogout}>Logout</button>
-      </header>
+      <h1>📋 {user.username}'s Todo List</h1>
+      <button className="logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
 
-      <form onSubmit={handleAdd} className="todo-form">
+      <form onSubmit={handleSubmit} className="todo-form">
         <input
           type="text"
           placeholder="Enter task..."
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (e.target.value.trim() !== "") setError("");
+          }}
         />
         <button type="submit">Add</button>
       </form>
+      {error && <p className="error-message">{error}</p>}
 
       {todos.length === 0 ? (
         <p className="no-tasks">No tasks yet! Add a task. 📝</p>
       ) : (
         <ul className="todo-list">
-          {todos.map(todo => (
+          {todos.map((todo) => (
             <li key={todo._id} className="todo-item">
-              <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
+              <span
+                style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+              >
                 {todo.title}
               </span>
               <div>
-                <button className="edit" onClick={() => openEditModal(todo)}>Edit</button>
-                <button className="delete" onClick={() => handleDelete(todo._id)}>Delete</button>
+                <button className="edit" onClick={() => openEditModal(todo)}>
+                  Edit
+                </button>
+                <button className="delete" onClick={() => handleDelete(todo._id)}>
+                  Delete
+                </button>
               </div>
             </li>
           ))}
@@ -130,9 +157,13 @@ export default function TodoApp({ token, user, onLogout }) {
       {/* Edit Modal */}
       {modalOpen && (
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>Edit Task</h2>
-            <input value={editTitle} onChange={e => setEditTitle(e.target.value)} />
+            <input
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+            />
             <div className="modal-buttons">
               <button onClick={handleUpdate}>Update</button>
               <button onClick={() => setModalOpen(false)}>Cancel</button>
