@@ -4,6 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -12,13 +14,13 @@ const PORT = process.env.PORT || 5001;
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 // ----------------------
-// Middlewares
+// Middleware
 // ----------------------
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN || "*" }));
 app.use(express.json());
 
 // ----------------------
-// MongoDB Connection
+// MongoDB connection
 // ----------------------
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -26,7 +28,7 @@ mongoose
   .catch((err) => console.error("❌ MongoDB connection error:", err.message));
 
 // ----------------------
-// Mongoose Schemas & Models
+// Schemas & Models
 // ----------------------
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -43,7 +45,7 @@ const User = mongoose.model("User", UserSchema);
 const Todo = mongoose.model("Todo", TodoSchema);
 
 // ----------------------
-// JWT Auth Middleware
+// Middleware: verify JWT
 // ----------------------
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -63,7 +65,6 @@ const authMiddleware = (req, res, next) => {
 // ----------------------
 app.post("/auth/register", async (req, res) => {
   const { username, password } = req.body;
-
   if (!username || !password)
     return res.status(400).json({ message: "Username and password required" });
 
@@ -75,7 +76,7 @@ app.post("/auth/register", async (req, res) => {
   await user.save();
 
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
-  res.json({ token });
+  res.json({ token, user: { id: user._id, username: user.username } });
 });
 
 app.post("/auth/login", async (req, res) => {
@@ -87,11 +88,11 @@ app.post("/auth/login", async (req, res) => {
   if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
-  res.json({ token });
+  res.json({ token, user: { id: user._id, username: user.username } });
 });
 
 // ----------------------
-// Todo Routes (Protected)
+// Todo Routes (protected)
 // ----------------------
 app.get("/todos", authMiddleware, async (req, res) => {
   const todos = await Todo.find({ user: req.userId });
@@ -130,6 +131,18 @@ app.delete("/todos/:id", authMiddleware, async (req, res) => {
 });
 
 // ----------------------
-// Start Server
+// Serve React frontend
 // ----------------------
-app.listen(PORT, () => console.log(`🚀 Backend running on http://localhost:${PORT}`));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "mern-todo-frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "mern-todo-frontend/dist", "index.html"));
+});
+
+// ----------------------
+// Start server
+// ----------------------
+app.listen(PORT, () => console.log(`🚀 Backend & Frontend running on http://localhost:${PORT}`));
