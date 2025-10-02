@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "./services/api"; // ✅ centralized API service
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-// Backend API URL
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
-
 function App() {
+  // Todos
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Auth states
+  // Auth
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,41 +25,30 @@ function App() {
     return () => document.removeEventListener("contextmenu", handleContextMenu);
   }, []);
 
-  // Check if user is already logged in
+  // Check token on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setLoggedIn(true);
-      fetchTodos(token);
+      fetchTodos();
     }
   }, []);
 
-  // Fetch todos
-  const fetchTodos = async (token) => {
-    try {
-      const res = await axios.get(`${API_BASE}/todos`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setTodos(res.data);
-    } catch (err) {
-      console.error(err);
-      toast.error("❌ Failed to fetch todos");
-    }
-  };
-
-  // Handle register/login
+  // --------------------------
+  // Auth Handlers
+  // --------------------------
   const handleAuth = async (e) => {
     e.preventDefault();
     if (!username || !password) return toast.warning("⚠️ Enter username and password");
 
     try {
       const endpoint = isLogin ? "login" : "register";
-      const res = await axios.post(`${API_BASE}/auth/${endpoint}`, { username, password });
+      const res = await api.post(`/auth/${endpoint}`, { username, password });
       localStorage.setItem("token", res.data.token);
       setLoggedIn(true);
       setUsername("");
       setPassword("");
-      fetchTodos(res.data.token);
+      fetchTodos();
       toast.success(`✅ ${isLogin ? "Logged in" : "Registered"} successfully!`);
     } catch (err) {
       console.error(err);
@@ -69,7 +56,6 @@ function App() {
     }
   };
 
-  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);
@@ -77,19 +63,26 @@ function App() {
     toast.info("🔒 Logged out");
   };
 
-  // Add task
+  // --------------------------
+  // Todos Handlers
+  // --------------------------
+  const fetchTodos = async () => {
+    try {
+      const res = await api.get("/todos");
+      setTodos(res.data);
+    } catch (err) {
+      console.error(err);
+      toast.error("❌ Failed to fetch todos");
+    }
+  };
+
   const handleAdd = async (e) => {
     e.preventDefault();
     const trimmed = title.trim();
     if (!trimmed) return toast.warning("⚠️ Enter a task");
 
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        `${API_BASE}/todos`,
-        { title: trimmed },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post("/todos", { title: trimmed });
       setTodos([...todos, res.data]);
       setTitle("");
       toast.success("✅ Task added!");
@@ -99,13 +92,9 @@ function App() {
     }
   };
 
-  // Delete task
   const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.delete(`${API_BASE}/todos/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/todos/${id}`);
       setTodos(todos.filter((t) => t._id !== id));
       toast.warn("🗑️ Task deleted!");
     } catch (err) {
@@ -114,25 +103,18 @@ function App() {
     }
   };
 
-  // Open edit modal
   const openEditModal = (todo) => {
     setEditId(todo._id);
     setEditTitle(todo.title);
     setModalOpen(true);
   };
 
-  // Update task
   const handleUpdate = async () => {
     const trimmed = editTitle.trim();
     if (!trimmed) return toast.warning("⚠️ Enter a task");
 
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.put(
-        `${API_BASE}/todos/${editId}`,
-        { title: trimmed },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.put(`/todos/${editId}`, { title: trimmed });
       setTodos(todos.map((t) => (t._id === editId ? res.data : t)));
       setModalOpen(false);
       toast.info("✏️ Task updated!");
@@ -175,9 +157,7 @@ function App() {
     <div className="app-container">
       <header>
         <h1>📋 My Todo App</h1>
-        <button onClick={handleLogout} className="logout-btn">
-          Logout
-        </button>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
       </header>
 
       <form onSubmit={handleAdd} className="todo-form">
