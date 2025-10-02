@@ -1,100 +1,83 @@
-import React, { useState, useEffect } from "react";
-import api from "./services/api"; // ✅ centralized API service
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import "./App.css";
 
+// Backend API base URL
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const TODOS_ENDPOINT = `${API_BASE}/todos`;
+
 function App() {
-  // Todos
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [error, setError] = useState("");
 
-  // Auth
-  const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  // Disable right-click
+  // Disable right click
   useEffect(() => {
-    const handleContextMenu = (e) => e.preventDefault();
-    document.addEventListener("contextmenu", handleContextMenu);
-    return () => document.removeEventListener("contextmenu", handleContextMenu);
+    const handleRightClick = (e) => e.preventDefault();
+    document.addEventListener("contextmenu", handleRightClick);
+    return () => document.removeEventListener("contextmenu", handleRightClick);
   }, []);
 
-  // Check token on mount
+  // Fetch todos
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setLoggedIn(true);
-      fetchTodos();
-    }
-  }, []);
+    if (token) fetchTodos();
+  }, [token]);
 
-  // --------------------------
-  // Auth Handlers
-  // --------------------------
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    if (!username || !password) return toast.warning("⚠️ Enter username and password");
-
-    try {
-      const endpoint = isLogin ? "login" : "register";
-      const res = await api.post(`/auth/${endpoint}`, { username, password });
-      localStorage.setItem("token", res.data.token);
-      setLoggedIn(true);
-      setUsername("");
-      setPassword("");
-      fetchTodos();
-      toast.success(`✅ ${isLogin ? "Logged in" : "Registered"} successfully!`);
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || "❌ Authentication failed");
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setLoggedIn(false);
-    setTodos([]);
-    toast.info("🔒 Logged out");
-  };
-
-  // --------------------------
-  // Todos Handlers
-  // --------------------------
   const fetchTodos = async () => {
     try {
-      const res = await api.get("/todos");
+      const res = await axios.get(TODOS_ENDPOINT, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setTodos(res.data);
     } catch (err) {
-      console.error(err);
-      toast.error("❌ Failed to fetch todos");
+      console.error("Error fetching todos:", err);
+      toast.error("❌ Unable to fetch tasks");
     }
   };
 
-  const handleAdd = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const trimmed = title.trim();
-    if (!trimmed) return toast.warning("⚠️ Enter a task");
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) {
+      setError("⚠️ Please enter a task!");
+      return;
+    }
+    setError("");
+
+    const isDuplicate = todos.some(
+      (t) => t.title.toLowerCase() === trimmedTitle.toLowerCase()
+    );
+    if (isDuplicate) return toast.warning("⚠️ Task already exists!");
 
     try {
-      const res = await api.post("/todos", { title: trimmed });
+      const res = await axios.post(
+        TODOS_ENDPOINT,
+        { title: trimmedTitle },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setTodos([...todos, res.data]);
       setTitle("");
       toast.success("✅ Task added!");
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "❌ Error adding task");
+      toast.error("❌ Error adding task");
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/todos/${id}`);
+      await axios.delete(`${TODOS_ENDPOINT}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setTodos(todos.filter((t) => t._id !== id));
       toast.warn("🗑️ Task deleted!");
     } catch (err) {
@@ -110,76 +93,87 @@ function App() {
   };
 
   const handleUpdate = async () => {
-    const trimmed = editTitle.trim();
-    if (!trimmed) return toast.warning("⚠️ Enter a task");
+    const trimmedTitle = editTitle.trim();
+    if (!trimmedTitle) return toast.warning("⚠️ Task cannot be empty");
+
+    const isDuplicate = todos.some(
+      (t) => t.title.toLowerCase() === trimmedTitle.toLowerCase() && t._id !== editId
+    );
+    if (isDuplicate) return toast.warning("⚠️ Task already exists");
 
     try {
-      const res = await api.put(`/todos/${editId}`, { title: trimmed });
+      const res = await axios.put(
+        `${TODOS_ENDPOINT}/${editId}`,
+        { title: trimmedTitle },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setTodos(todos.map((t) => (t._id === editId ? res.data : t)));
       setModalOpen(false);
       toast.info("✏️ Task updated!");
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "❌ Error updating task");
+      toast.error("❌ Error updating task");
     }
   };
 
-  // --------------------------
-  // Render
-  // --------------------------
-  if (!loggedIn) {
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setToken("");
+    setUser(null);
+    setTodos([]);
+  };
+
+  if (!token)
     return (
       <div className="auth-container">
-        <h1>{isLogin ? "🔑 Login" : "📝 Register"}</h1>
-        <form onSubmit={handleAuth}>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit">{isLogin ? "Login" : "Register"}</button>
-        </form>
-        <p className="switch-auth" onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
-        </p>
+        <h1>📋 MERN Todo App</h1>
+        <div className="auth-forms">
+          <Login setToken={setToken} setUser={setUser} />
+          <Register />
+        </div>
       </div>
     );
-  }
 
   return (
     <div className="app-container">
-      <header>
-        <h1>📋 My Todo App</h1>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
-      </header>
+      <h1>📋 {user.username}'s Todo List</h1>
+      <button className="logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
 
-      <form onSubmit={handleAdd} className="todo-form">
+      <form onSubmit={handleSubmit} className="todo-form">
         <input
           type="text"
           placeholder="Enter task..."
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (e.target.value.trim() !== "") setError("");
+          }}
         />
         <button type="submit">Add</button>
       </form>
+      {error && <p className="error-message">{error}</p>}
 
       {todos.length === 0 ? (
-        <p className="no-tasks">No tasks yet! 📝</p>
+        <p className="no-tasks">No tasks yet! Add a task. 📝</p>
       ) : (
         <ul className="todo-list">
           {todos.map((todo) => (
             <li key={todo._id} className="todo-item">
-              <span>{todo.title}</span>
+              <span
+                style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+              >
+                {todo.title}
+              </span>
               <div>
-                <button onClick={() => openEditModal(todo)}>Edit</button>
-                <button onClick={() => handleDelete(todo._id)}>Delete</button>
+                <button className="edit" onClick={() => openEditModal(todo)}>
+                  Edit
+                </button>
+                <button className="delete" onClick={() => handleDelete(todo._id)}>
+                  Delete
+                </button>
               </div>
             </li>
           ))}
@@ -207,7 +201,8 @@ function App() {
       {/* Footer */}
       <footer className="footer">
         <p>
-          © 2025 Made With <span style={{ color: "red" }}>❤️</span> MJ. All Rights Reserved.
+          © 2025 Made With <span style={{ color: "red" }}>❤️</span> MJ. All Rights
+          Reserved.
         </p>
       </footer>
 
