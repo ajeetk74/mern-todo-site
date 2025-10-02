@@ -14,10 +14,16 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     try {
       const res = await axios.post(`${API_BASE}/auth/login`, { username, password });
+
+      // Store token and optional user info
       localStorage.setItem("token", res.data.token);
-      onLogin(res.data.token);
+      if (res.data.user) localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // Call parent callback
+      onLogin(res.data.token, res.data.user || null);
+
       toast.success("✅ Login successful!");
-      navigate("/"); // redirect to main TodoApp
+      navigate("/"); // redirect to TodoApp
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "❌ Login failed");
@@ -26,7 +32,7 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="auth-page">
-      <form className="auth-form" onSubmit={handleLogin}>
+      <form className="auth-form" onSubmit={handleLogin} autoComplete="off">
         <h2>Login</h2>
         <input
           type="text"
