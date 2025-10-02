@@ -10,6 +10,7 @@
     "build:gh": "vite build --config vite.config.gh.js",
     "build:vercel": "vite build --config vite.config.vercel.js",
     "preview": "vite preview",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
