@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import React, { useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import TodoApp from "./components/TodoApp";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-export default function App() {
+function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null
   );
-
-  // Disable right-click
-  useEffect(() => {
-    const handleRightClick = (e) => e.preventDefault();
-    document.addEventListener("contextmenu", handleRightClick);
-    return () => document.removeEventListener("contextmenu", handleRightClick);
-  }, []);
+  const [showRegister, setShowRegister] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -28,38 +20,40 @@ export default function App() {
     setUser(null);
   };
 
-  const ProtectedRoute = ({ children }) => {
-    if (!token) return <Navigate to="/login" />;
-    return children;
-  };
+  // Toggle between login and register pages
+  const toggleAuthPage = () => setShowRegister(!showRegister);
 
-  return (
-    <Router>
-      <Routes>
-        {!token && (
+  if (!token) {
+    return (
+      <div className="auth-container">
+        <h1>📋 MERN Todo App</h1>
+        {showRegister ? (
           <>
-            <Route
-              path="/login"
-              element={<Login setToken={setToken} setUser={setUser} />}
-            />
-            <Route
-              path="/register"
-              element={<Register setToken={setToken} setUser={setUser} />}
-            />
+            <Register toggleAuthPage={toggleAuthPage} />
+            <p className="toggle-text">
+              Already have an account?{" "}
+              <span className="toggle-link" onClick={toggleAuthPage}>
+                Login
+              </span>
+            </p>
+          </>
+        ) : (
+          <>
+            <Login setToken={setToken} setUser={setUser} />
+            <p className="toggle-text">
+              Don't have an account?{" "}
+              <span className="toggle-link" onClick={toggleAuthPage}>
+                Register
+              </span>
+            </p>
           </>
         )}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <TodoApp token={token} user={user} onLogout={handleLogout} />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to={token ? "/" : "/login"} />} />
-      </Routes>
+        <ToastContainer position="top-right" autoClose={2000} />
+      </div>
+    );
+  }
 
-      <ToastContainer position="top-right" autoClose={2000} />
-    </Router>
-  );
+  return <TodoApp token={token} user={user} handleLogout={handleLogout} />;
 }
+
+export default App;
