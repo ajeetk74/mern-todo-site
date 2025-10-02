@@ -1,179 +1,123 @@
-/* Global Layout */
-body, html, #root {
-  height: 100%;
+/* Global Reset */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-  display: flex;
-  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.app-container {
-  display: flex;
-  flex-direction: column;
+body {
+  background: linear-gradient(to right, #74ebd5, #acb6e5);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+header h1 {
+  font-size: 1.8rem;
+}
+
+.logout-btn {
+  background: #ff6b6b;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #ff4b4b;
+}
+
+/* Container */
+.app-container {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
 }
 
-/* Container box */
-.container {
-  background: #ffffffcc;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-  width: 100%;
-  max-width: 500px;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-/* Hover effect */
-.container:hover {
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
-}
-
-/* Focus effect when any input inside is active */
-.container:focus-within {
-  box-shadow: 0 0 0 3px #4cafef, 0 8px 16px rgba(0,0,0,0.25);
-  transform: translateY(-2px);
-}
-
-
-/* Title */
-.container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-/* Form */
 .todo-form {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .todo-form input {
   flex: 1;
-  padding: 10px;
-  border: 2px solid #ddd;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
+  border: none;
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* Hover effect */
-.todo-form input:hover {
-  border-color: #4cafef;
-  box-shadow: 0 0 5px rgba(76, 175, 239, 0.3);
-}
-
-/* Focus effect (when clicked/active) */
-.todo-form input:focus {
-  border-color: #2196f3;
-  box-shadow: 0 0 8px rgba(33, 150, 243, 0.4);
-}
-
 
 .todo-form button {
-  padding: 10px 16px;
+  padding: 0.5rem 1rem;
   border: none;
+  background: #4dabf7;
+  color: #fff;
   border-radius: 8px;
-  background-color: #4cafef;
-  color: white;
-  font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .todo-form button:hover {
-  background-color: #3a91d8;
+  background: #1971c2;
 }
 
 /* Todo List */
 .todo-list {
   list-style: none;
-  padding: 0;
+  width: 100%;
+  max-width: 600px;
 }
 
 .todo-item {
-  background: #fff;
-  border: 1px solid #eee;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
   display: flex;
   justify-content: space-between;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  color: #fff;
   align-items: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Hover effect */
-.todo-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  border-color: #ddd;
-}
-
-
-.todo-item span {
-  font-size: 16px;
 }
 
 .todo-item button {
-  margin-left: 8px;
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
   border: none;
   border-radius: 6px;
-  padding: 6px 10px;
   cursor: pointer;
-  font-size: 14px;
+  transition: 0.3s;
 }
 
-.todo-item .edit {
-  background-color: #ffc107;
-  color: #333;
+.todo-item button:hover {
+  opacity: 0.8;
 }
 
-.todo-item .edit:hover {
-  background-color: #e0a800;
+.todo-item button:nth-child(1) {
+  background: #ffd43b;
+  color: #000;
 }
 
-.todo-item .delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.todo-item .delete:hover {
-  background-color: #b52a37;
-}
-
-/* No tasks message */
-.no-tasks {
-  text-align: center;
-  color: black;
-}
-
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-
-/* Footer */
-.footer {
-  background: lightgoldenrodyellow;
-  color: black;
-  text-align: center;
-  padding: 12px;
-  margin-top: auto;
+.todo-item button:nth-child(2) {
+  background: #ff6b6b;
+  color: #fff;
 }
 
 /* Modal */
@@ -181,66 +125,79 @@ body, html, #root {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Above footer */
 }
 
 .modal {
-  background: white;
-  padding: 20px;
+  background: #fff;
+  padding: 1.5rem;
   border-radius: 12px;
-  width: 300px;
-  text-align: center;
-  animation: fadeIn 0.3s ease;
+  min-width: 300px;
 }
 
 .modal input {
   width: 100%;
-  padding: 8px;
-  margin: 12px 0;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .modal-buttons button {
-  flex: 1;
-  margin: 0 5px;
-  padding: 8px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  transition: 0.3s;
 }
 
 .modal-buttons button:first-child {
-  background-color: #28a745;
-  color: white;
-}
-
-.modal-buttons button:first-child:hover {
-  background-color: #218838;
+  background: #4dabf7;
+  color: #fff;
 }
 
 .modal-buttons button:last-child {
-  background-color: #6c757d;
-  color: white;
+  background: #ff6b6b;
+  color: #fff;
 }
 
-.modal-buttons button:last-child:hover {
-  background-color: #565e64;
+/* Footer */
+.footer {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  padding: 1rem;
+  color: #fff;
+  margin-top: auto;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+/* Responsive */
+@media (max-width: 600px) {
+  .todo-form {
+    flex-direction: column;
+  }
+
+  .todo-form button {
+    width: 100%;
+  }
+
+  .todo-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .todo-item div {
+    margin-top: 0.5rem;
+  }
 }
