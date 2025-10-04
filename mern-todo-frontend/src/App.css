@@ -1,77 +1,10 @@
-<<<<<<< HEAD
-/* ------------------------
-   Global Styles
------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-body {
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
-}
-
-/* ------------------------
-   App Container
------------------------- */
-.app-container {
-  width: 100%;
-  max-width: 600px;
-  background: #ffffffcc;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-/* ------------------------
-   Header
------------------------- */
-.app-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 2rem;
-  color: #333;
-}
-
-/* ------------------------
-   Logout Button
------------------------- */
-.logout-btn {
-  background: #ff4d6d;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  float: right;
-  margin-top: -50px;
-  transition: all 0.3s ease;
-}
-.logout-btn:hover {
-  background: #ff1a3c;
-}
-
-/* ------------------------
-   Todo Form
------------------------- */
-=======
 /* ===== Page Container ===== */
 .page-container {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(135deg,#ff4d4d,#ffeb3b,#4caf50);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  background: linear-gradient(to bottom right, #f3e8ff, #c084fc);
   align-items: center;
   padding: 20px;
 }
@@ -87,7 +20,6 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .todo-container:hover {
-  border: 2px solid #c084fc;
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
@@ -95,13 +27,13 @@ body {
 /* ===== Header ===== */
 .header h1 {
   font-size: 1.8rem;
-  text-align: center;
   margin-bottom: 5px;
 }
-.header h1 { 
-  font-size: 1.8rem;
-  margin-bottom: 5px;
-  }
+.header p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
 .logout-btn {
   background-color: #f87171;
   color: #fff;
@@ -118,49 +50,13 @@ body {
 }
 
 /* ===== Todo Form ===== */
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
 .todo-form {
   display: flex;
-  margin-bottom: 20px;
   gap: 10px;
+  margin-bottom: 20px;
 }
 .todo-form input {
   flex: 1;
-<<<<<<< HEAD
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-.todo-form input:focus {
-  outline: none;
-  border-color: #4e54c8;
-  box-shadow: 0 0 10px rgba(78, 84, 200, 0.2);
-}
-
-.todo-form button {
-  background: #4e54c8;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.todo-form button:hover {
-  background: #3b3fc1;
-}
-
-/* ------------------------
-   Todo List
------------------------- */
-.todo-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-=======
   padding: 8px;
   border-radius: 6px;
   border: 2px solid #c084fc;
@@ -190,68 +86,11 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
 }
 .todo-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-<<<<<<< HEAD
-  background: #f0f0ff;
-  padding: 12px 16px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
-}
-.todo-item span {
-  font-size: 1rem;
-  word-break: break-word;
-}
-
-.todo-item:hover {
-  transform: translateY(-2px);
-}
-
-.todo-item button {
-  margin-left: 10px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.todo-item .edit {
-  background: #ffd54f;
-  color: #333;
-}
-.todo-item .edit:hover {
-  background: #ffca28;
-}
-
-.todo-item .delete {
-  background: #ff4d6d;
-  color: #fff;
-}
-.todo-item .delete:hover {
-  background: #ff1a3c;
-}
-
-/* ------------------------
-   Modal
------------------------- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-=======
   background: #f3f0ff;
   padding: 10px;
   border-radius: 8px;
@@ -259,7 +98,6 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .todo-item:hover {
-  border: 2px solid #fcf884;
   transform: translateX(5px);
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
@@ -322,38 +160,16 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 50;
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
 }
 .modal {
   background: #fff;
-<<<<<<< HEAD
-  padding: 30px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-.modal h2 {
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-=======
   padding: 20px;
   border-radius: 12px;
   width: 300px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
 }
 .modal input {
   width: 100%;
-<<<<<<< HEAD
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-  font-size: 1rem;
-=======
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 6px;
@@ -364,7 +180,6 @@ body {
 .modal input:hover, .modal input:focus {
   border-color: #9333ea;
   transform: scale(1.02);
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
 }
 .modal-buttons {
   display: flex;
@@ -372,119 +187,11 @@ body {
 }
 .modal-buttons .update {
   flex: 1;
-<<<<<<< HEAD
-  margin: 0 5px;
-  padding: 10px;
-  border-radius: 12px;
-=======
   background: #34d399;
   color: #fff;
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
   border: none;
+  border-radius: 6px;
   cursor: pointer;
-<<<<<<< HEAD
-  transition: all 0.3s ease;
-}
-
-.modal-buttons button:first-child {
-  background: #4e54c8;
-  color: #fff;
-}
-.modal-buttons button:first-child:hover {
-  background: #3b3fc1;
-}
-
-.modal-buttons button:last-child {
-  background: #ccc;
-}
-.modal-buttons button:last-child:hover {
-  background: #999;
-}
-
-/* ------------------------
-   Auth Pages
------------------------- */
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.auth-forms {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.auth-form {
-  background: #ffffffcc;
-  padding: 30px;
-  border-radius: 20px;
-  width: 280px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.auth-form h2 {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.auth-form input {
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.auth-form button {
-  background: #4e54c8;
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.auth-form button:hover {
-  background: #3b3fc1;
-}
-
-.auth-form p {
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-/* ------------------------
-   Footer
------------------------- */
-.footer {
-  text-align: center;
-  margin-top: 30px;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* ------------------------
-   Responsive
------------------------- */
-@media (max-width: 768px) {
-  .auth-forms {
-    flex-direction: column;
-  }
-
-  .logout-btn {
-    float: none;
-    display: block;
-    margin: 0 auto 20px;
-=======
   transition: background 0.2s, transform 0.2s;
 }
 .modal-buttons .update:hover {
@@ -506,12 +213,11 @@ body {
 
 /* ===== Footer ===== */
 .footer {
-  font-style: italic;
   margin-top: auto;
   text-align: center;
   padding: 10px;
   font-size: 0.9rem;
-  color: darkblack;
+  color: #555;
 }
 .heart { color: red; }
 
@@ -530,7 +236,6 @@ body {
   text-align: center;
 }
 .login-container:hover {
-  border: 2px solid #c084fc;
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
@@ -543,9 +248,7 @@ body {
   border-radius: 6px;
   border: 2px solid #c084fc;
   outline: none;
-  width: 80%;
-  align-self: center;
-  margin-bottom: 10px;
+  width: 100%;
   transition: border 0.2s, transform 0.2s;
 }
 .login-container input:hover, .login-container input:focus {
@@ -556,9 +259,7 @@ body {
   background-color: #a78bfa;
   color: #fff;
   border: none;
-  padding: 14px 0;
-  width: 30%;
-  align-self: center;
+  padding: 10px 0;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
@@ -572,7 +273,7 @@ body {
   color: #ef4444;
   font-weight: bold;
 }
-/* ===== Responsive ===== */
+/* ===== Responsive Design ===== */
 @media (max-width: 600px) {
   .todo-container, .login-container {
     padding: 15px;
@@ -580,9 +281,5 @@ body {
   }
   .header h1 {
     font-size: 1.5rem;
-  }
-  .header p {
-    font-size: 0.9rem;
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
   }
 }
