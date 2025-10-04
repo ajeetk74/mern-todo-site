@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #f3e8ff, #c084fc);
+  background: linear-gradient(135deg, #ff4d4d, #ffeb3b, #4caf50);
   align-items: center;
   padding: 20px;
 }
@@ -26,6 +26,7 @@
 
 /* ===== Header ===== */
 .header h1 {
+  text-align: center;
   font-size: 1.8rem;
   margin-bottom: 5px;
 }
@@ -236,6 +237,7 @@
   text-align: center;
 }
 .login-container:hover {
+  border-color: #9333ea;
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
@@ -245,10 +247,11 @@
 }
 .login-container input {
   padding: 8px;
+  margin-bottom: 10px;
   border-radius: 6px;
   border: 2px solid #c084fc;
   outline: none;
-  width: 100%;
+  width: 80%;
   transition: border 0.2s, transform 0.2s;
 }
 .login-container input:hover, .login-container input:focus {
