@@ -20,4 +20,8 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+<<<<<<< HEAD
 export default api;
+=======
+export default api;
+>>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)

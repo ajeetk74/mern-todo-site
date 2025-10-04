@@ -6,4 +6,8 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
+<<<<<<< HEAD
 export default mongoose.model("User", UserSchema);
+=======
+export default mongoose.model("User", UserSchema);
+>>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
