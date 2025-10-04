@@ -1,16 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-<<<<<<< HEAD
-export default defineConfig({
-  base: "/", // ✅ Vercel serves from root
-  plugins: [react()],
-  server: {
-    proxy: {
-      "/todos": "http://localhost:5001"
-    }
-  }
-=======
 // Vite configuration for Vercel deployment
 export default defineConfig({
   plugins: [react()],
@@ -30,5 +20,4 @@ export default defineConfig({
       },
     },
   },
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
 });
