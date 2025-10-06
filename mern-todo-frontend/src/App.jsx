@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,7 +15,7 @@ export default function App() {
     setToken(authToken);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", authToken);
-    toast.success("Login successful!");
+    toast.success("✅ Login successful!");
   };
 
   const handleLogout = () => {
@@ -23,21 +23,15 @@ export default function App() {
     setToken("");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    toast.info("Logged out!");
+    toast.info("ℹ️ Logged out!");
   };
 
   return (
-    <>
+    <Router>
       <Routes>
         <Route
           path="/"
-          element={
-            token ? (
-              <TodoApp token={token} user={user} onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
+          element={token ? <TodoApp token={token} user={user} onLogout={handleLogout} /> : <Navigate to="/login" />}
         />
         <Route
           path="/login"
@@ -47,9 +41,10 @@ export default function App() {
           path="/register"
           element={!token ? <Auth onLogin={handleLogin} /> : <Navigate to="/" />}
         />
+        {/* Fallback: redirect unknown URLs */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-
       <ToastContainer position="top-right" autoClose={2000} />
-    </>
+    </Router>
   );
 }
