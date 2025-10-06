@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-// ✅ Use the deployed backend URL here:
 const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  "https://mern-todo-site-aef3.onrender.com";
+  import.meta.env.VITE_API_URL || "https://mern-todo-site-aef3.onrender.com";
 
 export default function Auth({ onLogin }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -37,7 +35,6 @@ export default function Auth({ onLogin }) {
 
       const { token, user } = res.data;
 
-      // Save token locally
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
@@ -47,14 +44,11 @@ export default function Auth({ onLogin }) {
         isRegister ? "✅ Registered successfully!" : "✅ Logged in!"
       );
 
-      // Clear inputs
       setUsername("");
       setPassword("");
     } catch (err) {
       console.error("Auth Error:", err);
-      toast.error(
-        err.response?.data?.message || "❌ Authentication failed"
-      );
+      toast.error(err.response?.data?.message || "❌ Authentication failed");
     } finally {
       setLoading(false);
     }
