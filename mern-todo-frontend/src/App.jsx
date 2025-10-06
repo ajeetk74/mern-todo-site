@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -27,7 +27,7 @@ export default function App() {
   };
 
   return (
-    <Router>
+    <>
       <Routes>
         <Route
           path="/"
@@ -50,6 +50,6 @@ export default function App() {
       </Routes>
 
       <ToastContainer position="top-right" autoClose={2000} />
-    </Router>
+    </>
   );
 }
