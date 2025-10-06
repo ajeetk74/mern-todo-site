@@ -5,8 +5,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import path from "path";
-import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -182,14 +180,5 @@ app.delete("/todos/:id", authMiddleware, async (req, res) => {
   }
 });
 
-// ✅ Serve React frontend
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(express.static(path.join(__dirname, "mern-todo-frontend/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "mern-todo-frontend/dist", "index.html"));
-});
-
 // ✅ Start Server
-app.listen(PORT, () => console.log(`🚀 Backend & Frontend running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Backend running on http://localhost:${PORT}`));
