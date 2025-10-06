@@ -15,7 +15,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 // ✅ CORS Configuration
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://mern-todo-site.vercel.app", // your deployed frontend
+  "https://mern-todo-site.vercel.app",
   "https://ajeetk74.github.io",
   process.env.ALLOWED_ORIGIN,
 ].filter(Boolean);
@@ -75,16 +75,6 @@ const authMiddleware = (req, res, next) => {
 };
 
 // ✅ Auth Routes
-
-// Friendly GET messages
-app.get("/auth/register", (req, res) =>
-  res.send("This is the register POST endpoint. Use POST to register a user.")
-);
-app.get("/auth/login", (req, res) =>
-  res.send("This is the login POST endpoint. Use POST to login.")
-);
-
-// POST register
 app.post("/auth/register", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -92,8 +82,7 @@ app.post("/auth/register", async (req, res) => {
       return res.status(400).json({ message: "Username and password required" });
 
     const existing = await User.findOne({ username });
-    if (existing)
-      return res.status(400).json({ message: "Username already exists" });
+    if (existing) return res.status(400).json({ message: "Username already exists" });
 
     const hashed = await bcrypt.hash(password, 10);
     const user = new User({ username, password: hashed });
@@ -107,7 +96,6 @@ app.post("/auth/register", async (req, res) => {
   }
 });
 
-// POST login
 app.post("/auth/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -125,9 +113,15 @@ app.post("/auth/login", async (req, res) => {
   }
 });
 
-// ✅ Todo Routes
+// ✅ Optional GET routes for debugging
+app.get("/auth/register", (req, res) =>
+  res.send("POST to this endpoint to register a user.")
+);
+app.get("/auth/login", (req, res) =>
+  res.send("POST to this endpoint to login a user.")
+);
 
-// Friendly GET root messages
+// ✅ Todo Routes
 app.get("/todos", authMiddleware, async (req, res) => {
   try {
     const todos = await Todo.find({ user: req.userId });
