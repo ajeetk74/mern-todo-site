@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -30,6 +29,8 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
@@ -113,14 +114,6 @@ app.post("/auth/login", async (req, res) => {
   }
 });
 
-// ✅ Optional GET routes for debugging
-app.get("/auth/register", (req, res) =>
-  res.send("POST to this endpoint to register a user.")
-);
-app.get("/auth/login", (req, res) =>
-  res.send("POST to this endpoint to login a user.")
-);
-
 // ✅ Todo Routes
 app.get("/todos", authMiddleware, async (req, res) => {
   try {
@@ -191,4 +184,4 @@ app.delete("/todos/:id", authMiddleware, async (req, res) => {
 });
 
 // ✅ Start Server
-app.listen(PORT, () => console.log(`🚀 Backend running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
