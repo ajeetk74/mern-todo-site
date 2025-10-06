@@ -14,8 +14,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 // ✅ CORS Configuration
 const allowedOrigins = [
-  "http://localhost:5173",
-  process.env.ALLOWED_ORIGIN,
+  "http://localhost:5173",                    // local dev
+  "https://mern-todo-site.vercel.app",       // deployed frontend
+  process.env.ALLOWED_ORIGIN,                // any additional origin from .env
 ].filter(Boolean);
 
 app.use(
