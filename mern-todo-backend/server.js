@@ -16,6 +16,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 const allowedOrigins = [
   "http://localhost:5173",
   "https://mern-todo-site.vercel.app", // your deployed frontend
+  "https://ajeetk74.github.io",
   process.env.ALLOWED_ORIGIN,
 ].filter(Boolean);
 
