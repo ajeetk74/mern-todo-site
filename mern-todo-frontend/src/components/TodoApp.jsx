@@ -21,20 +21,29 @@ export default function TodoApp({ token, user, onLogout }) {
     if (token) fetchTodos();
   }, [token]);
 
+  // -------------------------
+  // ✅ Fetch Todos
+  // -------------------------
   const fetchTodos = async () => {
     try {
       const res = await axios.get(`${API_BASE}/todos`, authHeaders);
       setTodos(res.data);
-    } catch (err) {
-      console.error("Fetch Todos Error:", err.response || err);
+    } catch {
       toast.error("⚠️ Unable to fetch tasks");
     }
   };
 
+  // -------------------------
+  // ✅ Add Todo
+  // -------------------------
   const handleAddTodo = async (e) => {
     e.preventDefault();
     const title = newTitle.trim();
     if (!title) return toast.warning("⚠️ Task cannot be empty");
+
+    // Check for duplicate title on frontend
+    if (todos.some((t) => t.title.toLowerCase() === title.toLowerCase()))
+      return toast.error("⚠️ Task already exists!");
 
     try {
       const res = await axios.post(`${API_BASE}/todos`, { title }, authHeaders);
@@ -42,19 +51,21 @@ export default function TodoApp({ token, user, onLogout }) {
       setTodos([...todos, newTodo]);
       setNewTitle("");
       toast.success("✅ Task added!");
+
       setTimeout(() => {
         setTodos((prev) =>
           prev.map((t) => (t._id === newTodo._id ? { ...t, animation: "" } : t))
         );
       }, 500);
     } catch (err) {
-      console.error("Add Todo Error:", err.response || err);
-      const message = err.response?.data?.message;
-      if (message === "Task already exists") toast.error("⚠️ Task already exists!");
-      else toast.error(message || "Error adding task");
+      const message = err.response?.data?.message || "Error adding task";
+      toast.error(message);
     }
   };
 
+  // -------------------------
+  // ✅ Delete Todo
+  // -------------------------
   const handleDelete = async (id) => {
     try {
       setTodos((prev) =>
@@ -65,12 +76,14 @@ export default function TodoApp({ token, user, onLogout }) {
         setTodos((prev) => prev.filter((t) => t._id !== id));
         toast.info("🗑️ Task deleted!");
       }, 300);
-    } catch (err) {
-      console.error("Delete Todo Error:", err.response || err);
+    } catch {
       toast.error("Error deleting task");
     }
   };
 
+  // -------------------------
+  // ✅ Edit Todo
+  // -------------------------
   const openEditModal = (todo) => {
     setEditId(todo._id);
     setEditTitle(todo.title);
@@ -80,31 +93,37 @@ export default function TodoApp({ token, user, onLogout }) {
   const handleUpdate = async () => {
     const title = editTitle.trim();
     if (!title) return toast.warning("⚠️ Task cannot be empty");
+    if (!editId) return toast.error("⚠️ Invalid task");
+
+    // Check for duplicate title on frontend
+    if (todos.some((t) => t.title.toLowerCase() === title.toLowerCase() && t._id !== editId))
+      return toast.error("⚠️ Task with this name already exists!");
 
     try {
       const res = await axios.put(`${API_BASE}/todos/${editId}`, { title }, authHeaders);
       setTodos((prev) =>
-        prev.map((t) =>
-          t._id === editId ? { ...res.data, animation: "edited" } : t
-        )
+        prev.map((t) => (t._id === editId ? { ...res.data, animation: "edited" } : t))
       );
+
       setModalOpen(false);
       setEditId(null);
       setEditTitle("");
       toast.info("✏️ Task updated!");
+
       setTimeout(() => {
         setTodos((prev) =>
           prev.map((t) => (t._id === res.data._id ? { ...t, animation: "" } : t))
         );
       }, 500);
     } catch (err) {
-      console.error("Update Todo Error:", err.response || err);
-      const message = err.response?.data?.message;
-      if (message?.includes("already exists")) toast.error("⚠️ Task with this name already exists!");
-      else toast.error(message || "Error updating task");
+      const message = err.response?.data?.message || "Error updating task";
+      toast.error(message);
     }
   };
 
+  // -------------------------
+  // ✅ Toggle Complete
+  // -------------------------
   const toggleComplete = async (todo) => {
     try {
       const res = await axios.put(
@@ -112,9 +131,8 @@ export default function TodoApp({ token, user, onLogout }) {
         { completed: !todo.completed },
         authHeaders
       );
-      setTodos(todos.map((t) => (t._id === todo._id ? res.data : t)));
-    } catch (err) {
-      console.error("Toggle Complete Error:", err.response || err);
+      setTodos((prev) => prev.map((t) => (t._id === todo._id ? res.data : t)));
+    } catch {
       toast.error("Error updating task");
     }
   };
@@ -123,7 +141,6 @@ export default function TodoApp({ token, user, onLogout }) {
     <div className="page-container">
       <ToastContainer position="top-right" autoClose={2000} />
 
-      {/* Todo Container */}
       <div className="todo-container">
         <header className="header">
           <h1>📋 My Todo List</h1>
@@ -165,7 +182,6 @@ export default function TodoApp({ token, user, onLogout }) {
         </ul>
       </div>
 
-      {/* Edit Modal */}
       {modalOpen && (
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -192,7 +208,6 @@ export default function TodoApp({ token, user, onLogout }) {
         </div>
       )}
 
-      {/* Footer */}
       <footer className="footer">
         © 2025 Made With <span className="heart">❤️</span> MJ. All Rights Reserved.
       </footer>

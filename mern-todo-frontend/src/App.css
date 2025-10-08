@@ -1,3 +1,4 @@
+/* ===================== */
 /* ===== Page Container ===== */
 .page-container {
   font-family: Arial, sans-serif;
@@ -9,21 +10,27 @@
   padding: 20px;
 }
 
-/* ===== Todo Container ===== */
-.todo-container {
+/* ===================== */
+/* ===== Todo & Auth Containers ===== */
+.todo-container, .login-container, .auth-container {
   background: #fff;
-  padding: 20px;
+  padding: 25px;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
 }
-.todo-container:hover {
+.todo-container:hover, .login-container:hover, .auth-container:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
 
+/* ===================== */
 /* ===== Header ===== */
 .header h1 {
   text-align: center;
@@ -50,38 +57,43 @@
   transform: scale(1.05);
 }
 
-/* ===== Todo Form ===== */
-.todo-form {
+/* ===================== */
+/* ===== Forms ===== */
+.todo-form, .auth-form {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
 }
-.todo-form input {
-  flex: 1;
+.todo-form input, .auth-form input {
   padding: 8px;
   border-radius: 6px;
   border: 2px solid #c084fc;
   outline: none;
   transition: border 0.2s, transform 0.2s;
+  width: 100%;
 }
-.todo-form input:hover, .todo-form input:focus {
+.todo-form input:hover, .todo-form input:focus,
+.auth-form input:hover, .auth-form input:focus {
   border-color: #9333ea;
   transform: scale(1.02);
 }
-.todo-form button {
+.todo-form button, .auth-form button {
   background-color: #a78bfa;
   border: none;
   padding: 8px 15px;
   border-radius: 6px;
   cursor: pointer;
   color: #fff;
+  font-size: 1rem;
   transition: background 0.2s, transform 0.2s;
 }
-.todo-form button:hover {
+.todo-form button:hover, .auth-form button:hover {
   background-color: #7c3aed;
   transform: scale(1.05);
 }
 
+/* ===================== */
 /* ===== Todo List ===== */
 .todo-list {
   list-style: none;
@@ -134,6 +146,7 @@
   transform: scale(1.1);
 }
 
+/* ===================== */
 /* ===== Animations ===== */
 .added { animation: fadeIn 0.5s forwards; }
 .deleted { animation: fadeOut 0.3s forwards; }
@@ -152,6 +165,7 @@
   50% { background-color: #e0d4ff; }
 }
 
+/* ===================== */
 /* ===== Modal ===== */
 .modal-overlay {
   position: fixed;
@@ -212,6 +226,7 @@
   transform: scale(1.05);
 }
 
+/* ===================== */
 /* ===== Footer ===== */
 .footer {
   margin-top: auto;
@@ -222,63 +237,25 @@
 }
 .heart { color: red; }
 
-/* ===== Login Page ===== */
-.login-container {
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-align: center;
-}
-.login-container:hover {
-  border-color: #9333ea;
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-}
-.login-container h1 {
+/* ===================== */
+/* ===== Login / Register ===== */
+.login-container h1, .auth-container h1 {
   font-size: 1.6rem;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
-.login-container input {
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  border: 2px solid #c084fc;
-  outline: none;
-  width: 80%;
-  transition: border 0.2s, transform 0.2s;
+
+/* ===================== */
+/* ===== No Tasks ===== */
+.no-tasks {
+  text-align: center;
+  color: #555;
+  font-style: italic;
 }
-.login-container input:hover, .login-container input:focus {
-  border-color: #9333ea;
-  transform: scale(1.02);
-}
-.login-container button {
-  background-color: #a78bfa;
-  color: #fff;
-  border: none;
-  padding: 10px 0;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.2s, transform 0.2s;
-}
-.login-container button:hover {
-  background-color: #7c3aed;
-  transform: scale(1.05);
-}
-.login-error {
-  color: #ef4444;
-  font-weight: bold;
-}
-/* ===== Responsive Design ===== */
+
+/* ===================== */
+/* ===== Responsive ===== */
 @media (max-width: 600px) {
-  .todo-container, .login-container {
+  .todo-container, .login-container, .auth-container {
     padding: 15px;
     width: 90%;
   }

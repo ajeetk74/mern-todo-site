@@ -9,8 +9,4 @@ export default function auth(req, res, next) {
   } catch {
     res.status(401).json({ message: 'Invalid token' });
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 823ce7b (Update frontend and backend: TodoApp, Auth pages, CSS, hover effects, container & footer design)
