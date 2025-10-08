@@ -13,11 +13,11 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !password) return toast.warning("⚠️ Fill all fields");
+    if (!username || !password) return toast.warning("⚠️ Please fill all fields!");
 
     try {
       await axios.post(`${API_BASE}/auth/register`, { username, password });
-      toast.success("✅ Registration successful! Please login.");
+      toast.success("🎉 Registration successful! Please login.");
       navigate("/login"); // Redirect to login page
     } catch (err) {
       console.error(err);
@@ -29,22 +29,22 @@ export default function Register() {
     <div className="page-container">
       <div className="login-container">
         <form className="auth-form" onSubmit={handleSubmit}>
-          <h2>Register</h2>
+          <h2>📝 Create Account</h2>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="👤 Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="🔒 Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Register</button>
+          <button type="submit">🚀 Register</button>
           <p>
-            Already have an account? <Link to="/login">Login here</Link>
+            Already have an account? <Link to="/login">🔑 Login here</Link>
           </p>
         </form>
       </div>

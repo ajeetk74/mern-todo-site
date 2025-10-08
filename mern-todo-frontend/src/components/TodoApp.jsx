@@ -29,7 +29,7 @@ export default function TodoApp({ token, user, onLogout }) {
       const res = await axios.get(`${API_BASE}/todos`, authHeaders);
       setTodos(res.data);
     } catch {
-      toast.error("⚠️ Unable to fetch tasks");
+      toast.error("⚠️ Unable to fetch tasks 😞");
     }
   };
 
@@ -39,18 +39,18 @@ export default function TodoApp({ token, user, onLogout }) {
   const handleAddTodo = async (e) => {
     e.preventDefault();
     const title = newTitle.trim();
-    if (!title) return toast.warning("⚠️ Task cannot be empty");
+    if (!title) return toast.warning("⚠️ Task cannot be empty 📝");
 
     // Check for duplicate title on frontend
     if (todos.some((t) => t.title.toLowerCase() === title.toLowerCase()))
-      return toast.error("⚠️ Task already exists!");
+      return toast.error("⚠️ Task already exists! 🚫");
 
     try {
       const res = await axios.post(`${API_BASE}/todos`, { title }, authHeaders);
       const newTodo = { ...res.data, animation: "added" };
       setTodos([...todos, newTodo]);
       setNewTitle("");
-      toast.success("✅ Task added!");
+      toast.success("✅ Task added successfully! 🎯");
 
       setTimeout(() => {
         setTodos((prev) =>
@@ -58,7 +58,7 @@ export default function TodoApp({ token, user, onLogout }) {
         );
       }, 500);
     } catch (err) {
-      const message = err.response?.data?.message || "Error adding task";
+      const message = err.response?.data?.message || "Error adding task ❌";
       toast.error(message);
     }
   };
@@ -74,10 +74,10 @@ export default function TodoApp({ token, user, onLogout }) {
       setTimeout(async () => {
         await axios.delete(`${API_BASE}/todos/${id}`, authHeaders);
         setTodos((prev) => prev.filter((t) => t._id !== id));
-        toast.info("🗑️ Task deleted!");
+        toast.info("🗑️ Task deleted successfully!");
       }, 300);
     } catch {
-      toast.error("Error deleting task");
+      toast.error("❌ Error deleting task");
     }
   };
 
@@ -92,12 +92,12 @@ export default function TodoApp({ token, user, onLogout }) {
 
   const handleUpdate = async () => {
     const title = editTitle.trim();
-    if (!title) return toast.warning("⚠️ Task cannot be empty");
-    if (!editId) return toast.error("⚠️ Invalid task");
+    if (!title) return toast.warning("⚠️ Task cannot be empty 📝");
+    if (!editId) return toast.error("⚠️ Invalid task ⚡");
 
     // Check for duplicate title on frontend
     if (todos.some((t) => t.title.toLowerCase() === title.toLowerCase() && t._id !== editId))
-      return toast.error("⚠️ Task with this name already exists!");
+      return toast.error("🚫 Task with this name already exists!");
 
     try {
       const res = await axios.put(`${API_BASE}/todos/${editId}`, { title }, authHeaders);
@@ -108,7 +108,7 @@ export default function TodoApp({ token, user, onLogout }) {
       setModalOpen(false);
       setEditId(null);
       setEditTitle("");
-      toast.info("✏️ Task updated!");
+      toast.info("✏️ Task updated successfully! 🔄");
 
       setTimeout(() => {
         setTodos((prev) =>
@@ -116,7 +116,7 @@ export default function TodoApp({ token, user, onLogout }) {
         );
       }, 500);
     } catch (err) {
-      const message = err.response?.data?.message || "Error updating task";
+      const message = err.response?.data?.message || "Error updating task ❌";
       toast.error(message);
     }
   };
@@ -132,8 +132,9 @@ export default function TodoApp({ token, user, onLogout }) {
         authHeaders
       );
       setTodos((prev) => prev.map((t) => (t._id === todo._id ? res.data : t)));
+      toast.success(todo.completed ? "⏳ Marked as incomplete" : "🎉 Marked as complete!");
     } catch {
-      toast.error("Error updating task");
+      toast.error("⚠️ Error updating task");
     }
   };
 
@@ -144,8 +145,8 @@ export default function TodoApp({ token, user, onLogout }) {
       <div className="todo-container">
         <header className="header">
           <h1>📋 My Todo List</h1>
-          <p>{user?.username}'s tasks below ⬇️</p>
-          <button className="logout-btn" onClick={onLogout}>Logout</button>
+          <p>👋 Hey {user?.username}! Here are your tasks below ⬇️</p>
+          <button className="logout-btn" onClick={onLogout}>🚪 Logout</button>
         </header>
 
         <form className="todo-form" onSubmit={handleAddTodo}>
@@ -153,14 +154,14 @@ export default function TodoApp({ token, user, onLogout }) {
             type="text"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Enter new task..."
+            placeholder="✍️ Add a new task..."
           />
-          <button type="submit">Add</button>
+          <button type="submit">➕ Add</button>
         </form>
 
         <ul className="todo-list">
           {todos.length === 0 ? (
-            <p className="no-tasks">✨ No tasks yet. Add one!</p>
+            <p className="no-tasks">✨ No tasks yet. Start your journey! 🚀</p>
           ) : (
             todos.map((todo) => (
               <li key={todo._id} className={`todo-item ${todo.animation}`}>
@@ -170,7 +171,9 @@ export default function TodoApp({ token, user, onLogout }) {
                     checked={todo.completed}
                     onChange={() => toggleComplete(todo)}
                   />
-                  <span className={todo.completed ? "completed" : ""}>{todo.title}</span>
+                  <span className={todo.completed ? "completed" : ""}>
+                    {todo.completed ? `✅ ${todo.title}` : `🕓 ${todo.title}`}
+                  </span>
                 </div>
                 <div className="actions">
                   <button className="edit" onClick={() => openEditModal(todo)}>✏️</button>
@@ -185,14 +188,14 @@ export default function TodoApp({ token, user, onLogout }) {
       {modalOpen && (
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>Edit Task</h2>
+            <h2>✏️ Edit Task</h2>
             <input
               type="text"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
             />
             <div className="modal-buttons">
-              <button className="update" onClick={handleUpdate}>Update</button>
+              <button className="update" onClick={handleUpdate}>💾 Update</button>
               <button
                 className="cancel"
                 onClick={() => {
@@ -201,7 +204,7 @@ export default function TodoApp({ token, user, onLogout }) {
                   setEditTitle("");
                 }}
               >
-                Cancel
+                ❌ Cancel
               </button>
             </div>
           </div>

@@ -13,7 +13,7 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !password) return toast.warning("⚠️ Fill all fields");
+    if (!username || !password) return toast.warning("⚠️ Please fill all fields!");
 
     try {
       const res = await axios.post(`${API_BASE}/auth/login`, { username, password });
@@ -23,11 +23,11 @@ export default function Login({ onLogin }) {
 
       onLogin(res.data.user, res.data.token);
 
-      toast.success("✅ Logged in successfully!");
+      toast.success("🎉 Logged in successfully!");
       navigate("/"); // Redirect to TodoApp
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "❌ Login failed");
+      toast.error(err.response?.data?.message || "❌ Login failed!");
     }
   };
 
@@ -35,29 +35,29 @@ export default function Login({ onLogin }) {
     <div className="page-container">
       <div className="login-container">
         <form className="auth-form" onSubmit={handleSubmit}>
-          <h2>Login</h2>
+          <h2>🔐 Welcome Back!</h2>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="👤 Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="🔒 Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <button type="submit">🚀 Login</button>
           <p>
-            Don't have an account? <Link to="/register">Register here</Link>
+            Don’t have an account? <Link to="/register">📝 Register here</Link>
           </p>
         </form>
       </div>
 
       {/* ✅ Footer */}
       <footer className="footer">
-        © 2025 Made With <span className="heart">❤️</span> MJ. All Rights Reserved.
+        © 2025 Made With <span className="heart">❤️</span> MJ • All Rights Reserved.
       </footer>
     </div>
   );
